@@ -4,7 +4,7 @@ from openpyxl import load_workbook
 
  
 #data_only=Ture로 해줘야 수식이 아닌 값으로 받아온다.
-load_wb = load_workbook("C:\\Users\\kingw\\OneDrive\\stock\\roe_chart2.xlsx", data_only=True)
+load_wb = load_workbook("C:\\Users\\kingw\\OneDrive\\stock\\roe_chart_2.xlsx", data_only=True)
 #시트 이름으로 불러오기
 load_ws = load_wb['Total']
  
