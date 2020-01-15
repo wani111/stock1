@@ -4,7 +4,7 @@ from openpyxl import load_workbook
 
  
 #data_only=Ture로 해줘야 수식이 아닌 값으로 받아온다.
-load_wb = load_workbook("C:\\Users\\kingw\\OneDrive\\stock\\roe_chart_2.xlsx", data_only=True)
+load_wb = load_workbook("C:\\Users\\kingw\\OneDrive\\stock\\roe_chart_main.xlsx", data_only=True)
 #시트 이름으로 불러오기
 load_ws = load_wb['Total']
  
@@ -43,8 +43,8 @@ for i in load_ws['I']:
 	now_price = get_price(code[1:])
 	print(j, code, now_price)
 	load_ws.cell(j,2,now_price)
-	load_wb.save("C:\\Users\\kingw\\OneDrive\\stock\\roe_chart.xlsx")	
-
+	
+load_wb.save("C:\\Users\\kingw\\OneDrive\\stock\\roe_chart_gen.xlsx")	
 
 #load_ws.cell(1,1,"test")
 #load_wb.save("C:\\Users\\kingw\\OneDrive\\stock\\roe_chart.xlsx")
