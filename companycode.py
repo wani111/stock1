@@ -4,7 +4,7 @@ import pandas as pd
  
 
 # csv 파일을 해석하여 dataframe으로 변환하고, stock_data 변수에 저장
-stock_data = pd.read_csv("companycode.csv", low_memory=False, dtype=str)
+stock_data = pd.read_csv("companycode_copy_2.csv", low_memory=False, dtype=str)
 
  
 
