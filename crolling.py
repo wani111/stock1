@@ -28,15 +28,15 @@ def get_balance_obj(company_code):
     finance_index = [item.get_text().strip() for item in finance_html.select('th.h_th2')][3:]
     finance_data = [item.get_text().strip() for item in finance_html.select('td')]
 
-    # print(annual_date)
-    # print(quarter_date)
-    # print(finance_index)
+    print(annual_date)
+    print(quarter_date)
+    print(finance_index)
     
 
     finance_data = np.array(finance_data)
     finance_data.resize(len(finance_index), 10)
 
-    #print(finance_data)
+    print(finance_data)
     
     finance_date = annual_date + quarter_date
     finance = pd.DataFrame(data=finance_data[0:,0:], index=finance_index, columns=finance_date)
