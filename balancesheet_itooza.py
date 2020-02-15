@@ -21,6 +21,7 @@ def get_price(company_code):
     no_today = bs_obj.find("p", {"class": "no_today"})
     blind = no_today.find("span", {"class": "blind"})
     now_price = blind.text
+    # print(f'price is {now_price}')
     return now_price
 
 def GetBalanceSheet(company_code, type = 'Annualized'):
@@ -78,43 +79,65 @@ def isfloat(value):
     except ValueError:
         return False
 
-def GetGeoMeanROE10(finance, num = 0) :
+def GetGeoMeanROE(finance, num = 0) :
     ROE = finance.iloc[7]   # Get ROE value 
-
+    # print(f'ROE datas are {ROE}')
     # for data in ROE_y :
     #     print(type(data), data)
 
     # a = (lambda x: len(ROE) if x == 0 else x)(num)
     # print(a)
+    ROE = [float(value) + 100 for value in ROE if isfloat(value)]
     roes = [value for value in ROE][0:(lambda x: len(ROE) if x == 0 else x)(num)]
+    #print(f'roes datas are {roes}')
+    # newroe = []
+    # for data in roes:
+    #     if isfloat(data) :
+    #         newroe.append(float(data) + 100) 
 
-    newroe = []
-    for data in roes:
-        if isfloat(data) :
-            newroe.append(float(data))
-
-    # print(newroe)
+    # print(f'newroe datas are {newroe}')
     # print(type(ROE), ROE, geometric_mean([float(value) for value in ROE]))
-    return geometric_mean(newroe)
+    return geometric_mean(roes) - 100
 
 
-def MakeDataStorage(company_code) :
+def MakeDataStorage(company) :
     Storage = {}
-    Storage['code'] = company_code
-    Storage['name'] = stock_code.iloc[stock_code.index[stock_code['Code'] == company_code]]['Name'].iloc[0]
-    Storage['value'] = get_price(company_code)
-    Storage['bs_Annualized'] = MakeDataFrame(GetBalanceSheet(company_code, 'Annualized'))
-    Storage['bs_Year'] = MakeDataFrame(GetBalanceSheet(company_code, 'Year'))
-    Storage['ROE10'] = GetGeoMeanROE10(Storage['bs_Year'])         # 10 years roe geomean
-    Storage['ROE3'] = GetGeoMeanROE10(Storage['bs_Annualized'])    # 3 years roe geomean
-    Storage['ROEy'] = GetGeoMeanROE10(Storage['bs_Annualized'], 4) # 1 years roe geomean 
-    Storage['ROEq'] = GetGeoMeanROE10(Storage['bs_Annualized'], 1) # 1 quarter roe geomean
-    print(Storage)
-    #print(Storage)
-
-
-MakeDataStorage("005930")
     
+    
+    # Storage['code'] = company
+    Storage['code'] = stock_code.iloc[stock_code.index[stock_code['Name'] == company]]['Code'].iloc[0]
+    
+    # Storage['name'] = stock_code.iloc[stock_code.index[stock_code['Code'] == company]]['Name'].iloc[0]
+    Storage['name'] = company
+
+    company_code = Storage['code']
+
+    # print(Storage['code'])
+    if(Storage['code'] is not None) :
+        Storage['value'] = get_price(company_code)
+        Storage['bs_Annualized'] = MakeDataFrame(GetBalanceSheet(company_code, 'Annualized'))
+        Storage['bs_Year'] = MakeDataFrame(GetBalanceSheet(company_code, 'Year'))
+        Storage['ROE10'] = GetGeoMeanROE(Storage['bs_Year'])         # 10 years roe geomean
+        Storage['ROE5'] = GetGeoMeanROE(Storage['bs_Year'], 5)       # 5 years roe geomean
+        Storage['ROE3'] = GetGeoMeanROE(Storage['bs_Annualized'])    # 3 years roe geomean
+        Storage['ROEy'] = GetGeoMeanROE(Storage['bs_Annualized'], 4) # 1 years roe geomean 
+        Storage['ROEq'] = GetGeoMeanROE(Storage['bs_Annualized'], 1) # 1 quarter roe geomean
+    # print(Storage)
+    return Storage
+    
+
+DBlist = []
+DBlist.append(MakeDataStorage('삼성전자'))
+DBlist.append(MakeDataStorage('SK하이닉스'))
+DBlist.append(MakeDataStorage('카카오'))
+DBlist.append(MakeDataStorage('한양이엔지'))    
+DBlist.append(MakeDataStorage('프로텍'))
+DBlist.append(MakeDataStorage('월덱스'))
+DBlist.append(MakeDataStorage('한국알콜'))
+DBlist.append(MakeDataStorage('아세아제지'))
+
+for datas in DBlist :
+    print(f" {datas['name']}'s ROE3 is {datas['ROE3']}")
 
 #finance = MakeDataFrame(GetBalanceSheet("005930"))
 
