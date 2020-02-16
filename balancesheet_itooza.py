@@ -98,7 +98,8 @@ def GetGeoMeanROE(finance, num = 0) :
 
     # print(f'newroe datas are {newroe}')
     # print(type(ROE), ROE, geometric_mean([float(value) for value in ROE]))
-    return geometric_mean(roes) - 100
+    try : return geometric_mean(roes) - 100
+    except : return 0
 
 def GetEPS(finance, num = 1, type = 'run') :
     EPS = finance.iloc[0]   # Get ROE value 
@@ -108,7 +109,8 @@ def GetEPS(finance, num = 1, type = 'run') :
     EPSs = [value for value in EPS][0:(lambda x: len(EPS) if x == 0 else x)(num)]
     if type == 'debug' :
         print(f'EPSs datas are {EPSs}')
-    return int(EPS[0].replace(',', ''))
+    try : return int(EPS[0].replace(',', ''))
+    except : return -1
 
 def GetBPS(finance, num = 1, type = 'run') :
     BPS = finance.iloc[3]   # Get ROE value 
@@ -118,7 +120,8 @@ def GetBPS(finance, num = 1, type = 'run') :
     BPSs = [value for value in BPS][0:(lambda x: len(BPS) if x == 0 else x)(num)]
     if type == 'debug' :
         print(f'BPSs datas are {BPSs}')
-    return int(BPS[0].replace(',', ''))
+    try : return int(BPS[0].replace(',', ''))
+    except : return 0
 
 def GetAllo(finance, num = 1, type = 'run') :
     ALLO = finance.iloc[6]   # Get ROE value 
@@ -128,22 +131,36 @@ def GetAllo(finance, num = 1, type = 'run') :
     AllOs = [value for value in ALLO][0:(lambda x: len(ALLO) if x == 0 else x)(num)]
     if type == 'debug' :
         print(f'AllOs datas are {AllOs}')
-    return float(AllOs[0])
-
+    try : return float(AllOs[0])
+    except : return 0
 
 def MakeDataStorage(company) :
     Storage = {}
     # Storage['code'] = company
     Storage['code'] = stock_code.iloc[stock_code.index[stock_code['Name'] == company]]['Code'].iloc[0]
-    # Storage['name'] = stock_code.iloc[stock_code.index[stock_code['Code'] == company]]['Name'].iloc[0]
+    #Storage['name'] = stock_code.iloc[stock_code.index[stock_code['Code'] == company]]['Name'].iloc[0]
     Storage['name'] = company
     company_code = Storage['code']
     # print(Storage['code'])
+    try : Storage['bs_Annualized'] = MakeDataFrame(GetBalanceSheet(company_code, 'Annualized'))
+    except : Storage['bs_Annualized'] = None
+    # print(f"{Storage['bs_Annualized']}")
+    try : Storage['bs_Year'] = MakeDataFrame(GetBalanceSheet(company_code, 'Year'))
+    except : Storage['bs_Year'] = None
+
+    if(Storage['bs_Annualized'] is None) :
+        print(f"Failing   ... {Storage['name']} BalanceSheet can't be crolled")
+        return None
+    if(Storage['bs_Year'] is None) :
+        print(f"Failing   ... {Storage['name']} BalanceSheet can't be crolled")
+        return None
+
     if(Storage['code'] is not None) :
         Storage['value'] = get_price(company_code)
         Storage['bs_Annualized'] = MakeDataFrame(GetBalanceSheet(company_code, 'Annualized'))
-        # print(f"{Storage['bs_Annualized']}")
-        Storage['bs_Year'] = MakeDataFrame(GetBalanceSheet(company_code, 'Year'))
+        
+       
+        
         Storage['ROE10'] = GetGeoMeanROE(Storage['bs_Year'])         # 10 years roe geomean
         Storage['ROE5'] = GetGeoMeanROE(Storage['bs_Year'], 5)       # 5 years roe geomean
         Storage['ROE3'] = GetGeoMeanROE(Storage['bs_Annualized'])    # 3 years roe geomean
@@ -151,10 +168,12 @@ def MakeDataStorage(company) :
         Storage['ROEq'] = GetGeoMeanROE(Storage['bs_Annualized'], 1) # 1 quarter roe geomean
         Storage['EPSq'] = GetEPS(Storage['bs_Annualized'], 1) # 1 quarter roe geomean
         Storage['BPSq'] = GetBPS(Storage['bs_Annualized'], 1) # 1 quarter roe geomean
-        Storage['배당'] = GetAllo(Storage['bs_Year'], 1) # 1 quarter roe geomean
+        try : Storage['배당'] = GetAllo(Storage['bs_Year'], 1) # 1 quarter roe geomean
+        except : Storage['배당'] = 0
         try : Storage['PER'] = Storage['value'] / Storage['EPSq']
-        except ZeroDivisionError : Storage['PER'] = 'infinite'
-        Storage['PBR'] = Storage['value'] / Storage['BPSq'] # 1 quarter roe geomean
+        except ZeroDivisionError : Storage['PER'] = 'N/A'
+        try : Storage['PBR'] = Storage['value'] / Storage['BPSq'] # 1 quarter roe geomean
+        except ZeroDivisionError : Storage['PER'] = 'N/A'
         Storage['미래가치'] = pow((Storage['ROE3']+100)/100, 10) * Storage['BPSq']
         Storage['기대ROE'] = (pow(Storage['미래가치'] / Storage['value'], 0.1)-1)*100 # 1 quarter roe geomean
         Storage['가격5'] = Storage['미래가치'] / pow(1.05, 10) # 1 quarter roe geomean
@@ -175,27 +194,17 @@ def MakeDataStorage(company) :
 df = pd.DataFrame()
 DataList = []
 def MakeDataFrameforDisplay(Data) :
-    print(f"Progrssing {Data['name']:>10} ......")
-    del Data['bs_Annualized']
-    del Data['bs_Year']
-    DataList.append(Data)
-    # print(DataList)
+    if Data is not None :
+        print(f"Progrssing... {Data['name']}")
+        del Data['bs_Annualized']
+        del Data['bs_Year']
+        print(f"{Data}")
+        DataList.append(Data)
+        # print(DataList)
 
 
-MakeDataFrameforDisplay(MakeDataStorage('삼성전자'))
-MakeDataFrameforDisplay(MakeDataStorage('SK하이닉스'))
-MakeDataFrameforDisplay(MakeDataStorage('카카오'))
-MakeDataFrameforDisplay(MakeDataStorage('한양이엔지'))
-MakeDataFrameforDisplay(MakeDataStorage('프로텍'))
-MakeDataFrameforDisplay(MakeDataStorage('월덱스'))
-MakeDataFrameforDisplay(MakeDataStorage('한국알콜'))
-MakeDataFrameforDisplay(MakeDataStorage('아세아제지'))
 
-df = pd.DataFrame(DataList)
-df.to_html('./financedata/my.html')
-writer = pd.ExcelWriter('stock.xlsx', engine='xlsxwriter')
-df.to_excel(writer, sheet_name='my')
-writer.save()
+
 
 # print(df)
 #d = pd.DataFrame(list(MakeDataStorage('삼성전자').items()), columns=['name'])
@@ -216,10 +225,6 @@ writer.save()
 
 # print(tabulate(finance, headers='keys', tablefmt='psql'))
 # print(finance.describe())
-
-StockIndex = ['종목명', '현재가', 'ROE(10)', 'ROE(5)', 'ROE(Y)', 'ROE(Q)']
-
-
 
 
 # ROE_y = finance.iloc[7]   # Get ROE value 
