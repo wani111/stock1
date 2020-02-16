@@ -1,5 +1,5 @@
 from balancesheet_itooza import *
-from companycode import stock_code
+from companycode import *
 import time
 import pandas as pd
 

@@ -64,15 +64,6 @@ def MakeDataFrame(bs):
     # print(finance)
     return finance
 
-def GetAllBalanceData() :
-    for idx, items in stock_code.iterrows():
-        if not os.path.isfile('./financedata/kospi/' + items["Name"] + '.html') :
-            bs = GetBalanceSheet(items["Code"])
-            if bs is not None :
-                finance = MakeDataFrame(bs)
-                finance.to_html('./financedata/kospi/' + items["Name"] + '.html')
-                print(tabulate(finance, headers='keys', tablefmt='psql'))
-
 def isfloat(value):
     try:
         float(value)
