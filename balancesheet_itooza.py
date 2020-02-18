@@ -6,6 +6,7 @@ import numpy as np
 import pandas as pd
 from tabulate import tabulate
 from companycode import stock_code
+from get_balancesheet import *
 import os.path 
 from statistics import geometric_mean
 
@@ -23,46 +24,6 @@ def get_price(company_code):
     now_price = blind.text
     # print(f'price is {now_price}')
     return int(now_price.replace(',', ''))
-
-def GetBalanceSheet(company_code, type = 'Annualized'):
-    url = "http://search.itooza.com/index.htm?seName=" + company_code
-    r = get(url)
-    soup = BeautifulSoup(r.content.decode('euc-kr','replace'), 'html.parser')
-    if(type == 'Annualized') :
-        table = soup.find("div", {"id": "indexTable1"})
-    elif(type == 'Year') :
-        table = soup.find("div", {"id": "indexTable2"})
-    # print(table)
-    return table
-
-def MakeDataFrame(bs):
-    finance_date = [item.get_text().strip() for item in bs.select('thead th')]
-    finance_index = [item.get_text().strip() for item in bs.select('tbody th')]
-    # finance_index = ["EPS(연)", "EPS(개)", "PER", "BPS", "PBR", "주배당", "시배당", "ROE", "순이익", "영업이익", "주가"]
-    finance_data = [item.get_text().strip() for item in bs.select('tbody td')]
-    # with open('bstable', 'w', encoding='utf-8') as bstable:
-    #     print(bs, file=bstable)
-
-    finance_data = np.array(finance_data)       # change finance_data to numpy array
-    finance_data.resize(len(finance_index), 12) # resize len(finance_index) x 12
-
-    # print(len(finance_date[1:]))
-    # print(finance_date[1:])
-
-    # print(len(finance_index))
-    # print(finance_index)
-    # print(finance_data)
-
-
-    # my_2darray = np.array([[1, 2, 3], [4, 5, 6]])
-    # print(pd.DataFrame(finance_data))
-    finance = pd.DataFrame(data=finance_data, index=finance_index, columns=finance_date[1:])
-    # annual_finance = finance.iloc[:, :4]
-    # quarter_finance = finance.iloc[:, 4:]
-    # print(finance_index)
-    # print(finance_data)
-    # print(finance)
-    return finance
 
 def isfloat(value):
     try:
@@ -101,7 +62,7 @@ def GetEPS(finance, num = 1, type = 'run') :
     if type == 'debug' :
         print(f'EPSs datas are {EPSs}')
     try : return int(EPS[0].replace(',', ''))
-    except : return -1
+    except : return 0.001
 
 def GetBPS(finance, num = 1, type = 'run') :
     BPS = finance.iloc[3]   # Get ROE value 
@@ -133,10 +94,10 @@ def MakeDataStorage(company) :
     Storage['name'] = company
     company_code = Storage['code']
     # print(Storage['code'])
-    try : Storage['bs_Annualized'] = MakeDataFrame(GetBalanceSheet(company_code, 'Annualized'))
+    try : Storage['bs_Annualized'] = GetDataFrame(company_code, 'Annualized')
     except : Storage['bs_Annualized'] = None
     # print(f"{Storage['bs_Annualized']}")
-    try : Storage['bs_Year'] = MakeDataFrame(GetBalanceSheet(company_code, 'Year'))
+    try : Storage['bs_Year'] = GetDataFrame(company_code, 'Year')
     except : Storage['bs_Year'] = None
 
     if(Storage['bs_Annualized'] is None) :
@@ -148,10 +109,7 @@ def MakeDataStorage(company) :
 
     if(Storage['code'] is not None) :
         Storage['value'] = get_price(company_code)
-        Storage['bs_Annualized'] = MakeDataFrame(GetBalanceSheet(company_code, 'Annualized'))
-        
-       
-        
+           
         Storage['ROE10'] = GetGeoMeanROE(Storage['bs_Year'])         # 10 years roe geomean
         Storage['ROE5'] = GetGeoMeanROE(Storage['bs_Year'], 5)       # 5 years roe geomean
         Storage['ROE3'] = GetGeoMeanROE(Storage['bs_Annualized'])    # 3 years roe geomean
@@ -159,12 +117,14 @@ def MakeDataStorage(company) :
         Storage['ROEq'] = GetGeoMeanROE(Storage['bs_Annualized'], 1) # 1 quarter roe geomean
         Storage['EPSq'] = GetEPS(Storage['bs_Annualized'], 1) # 1 quarter roe geomean
         Storage['BPSq'] = GetBPS(Storage['bs_Annualized'], 1) # 1 quarter roe geomean
+        if Storage['BPSq'] < 0 : Storage['BPSq'] = 0.001
+
         try : Storage['배당'] = GetAllo(Storage['bs_Year'], 1) # 1 quarter roe geomean
         except : Storage['배당'] = 0
         try : Storage['PER'] = Storage['value'] / Storage['EPSq']
         except ZeroDivisionError : Storage['PER'] = 'N/A'
         try : Storage['PBR'] = Storage['value'] / Storage['BPSq'] # 1 quarter roe geomean
-        except ZeroDivisionError : Storage['PER'] = 'N/A'
+        except ZeroDivisionError : Storage['PBR'] = 'N/A'
         Storage['미래가치'] = pow((Storage['ROE3']+100)/100, 10) * Storage['BPSq']
         Storage['기대ROE'] = (pow(Storage['미래가치'] / Storage['value'], 0.1)-1)*100 # 1 quarter roe geomean
         Storage['가격5'] = Storage['미래가치'] / pow(1.05, 10) # 1 quarter roe geomean
@@ -189,7 +149,7 @@ def MakeDataFrameforDisplay(Data) :
         print(f"Progrssing... {Data['name']}")
         del Data['bs_Annualized']
         del Data['bs_Year']
-        print(f"{Data}")
+        # print(f"{Data}")
         DataList.append(Data)
         # print(DataList)
 
