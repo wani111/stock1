@@ -2,6 +2,7 @@ from balancesheet_itooza import *
 from companycode import *
 import time
 import pandas as pd
+from time_folder import pathfolder
 
 log = open('log.txt', 'w', encoding='utf-8')
   #     print(bs, file=bstable)
@@ -15,8 +16,8 @@ for idx, items in kospi_stock_code.iterrows() :
         break
     finally :
         df = pd.DataFrame(DataList)
-        df.to_html('./financedata/kospi.html')
-        writer = pd.ExcelWriter('kospi.xlsx', engine='xlsxwriter')
+        df.to_html(pathfolder + '/kospi.html')
+        writer = pd.ExcelWriter(pathfolder + '/kospi.xlsx', engine='xlsxwriter')
         df.to_excel(writer, sheet_name='kospi')
         writer.save()
 # MakeDataFrameforDisplay(MakeDataStorage('CJ CGV'))

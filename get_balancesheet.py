@@ -2,6 +2,7 @@ from balancesheet_itooza import *
 from companycode import *
 import pandas as pd
 import os.path 
+from time_folder import pathfolder
 
 def GetAllBalanceData() :
     for idx, items in stock_code.iterrows():
@@ -80,7 +81,7 @@ def GetDataFrame(company, type = 'Annualized') :
     stock_name = stock_code.iloc[stock_code.index[stock_code['Code'] == company]]['Name'].iloc[0]
     
     if(type == 'Annualized') :
-        if not os.path.isfile('./financedata/kospi/Annualized/csv/' + stock_name + '.csv') :
+        if True : #not os.path.isfile('./financedata/kospi/Annualized/csv/' + stock_name + '.csv') :
             bs = GetBalanceSheet(company, 'Annualized')
             if bs is not None :
                 print(f" Annualized {stock_name} data are crolled from Naver..")
@@ -92,7 +93,7 @@ def GetDataFrame(company, type = 'Annualized') :
             finance = GetBalanceSheetFromCSV(company, 'Annualized')
             
     elif(type == 'Year') :
-        if not os.path.isfile('./financedata/kospi/Year/csv/' + stock_name + '.csv') :    
+        if True : #not os.path.isfile('./financedata/kospi/Year/csv/' + stock_name + '.csv') :    
             bs = GetBalanceSheet(company, 'Year')
             if bs is not None :    
                 print(f" Year {stock_name} data are crolled from Naver..")
@@ -120,4 +121,4 @@ Storage = {}
 #     print("SAME")
 # else :
 #     print("not same")
-Storage ['GetData'] = GetDataFrame('003580')
+#Storage ['GetData'] = GetDataFrame('003580')
