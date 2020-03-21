@@ -1,5 +1,5 @@
 from balancesheet_itooza import *
-from time_folder import pathfolder
+from time_folder import pathfolder, datetime
 
 MakeDataFrameforDisplay(MakeDataStorage('삼성전자'))
 MakeDataFrameforDisplay(MakeDataStorage('SK하이닉스'))
@@ -25,7 +25,7 @@ MakeDataFrameforDisplay(MakeDataStorage('바텍'))
 
 
 df = pd.DataFrame(DataList)
-df.to_html(pathfolder + '/MyStock.html')
-writer = pd.ExcelWriter(pathfolder + '/MyStock.xlsx', engine='xlsxwriter')
-df.to_excel(writer, sheet_name='my')
+df.to_html(pathfolder + '/MyStock' + datetime + '.html')
+writer = pd.ExcelWriter(pathfolder + '/MyStock' +datetime + '.xlsx', engine='xlsxwriter')
+df.to_excel(writer, sheet_name='MyStock')
 writer.save()

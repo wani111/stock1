@@ -2,7 +2,7 @@ from balancesheet_itooza import *
 from companycode import *
 import time
 import pandas as pd
-from time_folder import pathfolder
+from time_folder import pathfolder, datetime
 
 log = open('log.txt', 'w', encoding='utf-8')
   #     print(bs, file=bstable)
@@ -16,8 +16,8 @@ for idx, items in kosdaq_stock_code.iterrows() :
         break
     finally :
         df = pd.DataFrame(DataList)
-        df.to_html(pathfolder + '/kosdaq.html')
-        writer = pd.ExcelWriter(pathfolder +'/kosdaq.xlsx', engine='xlsxwriter')
+        df.to_html(pathfolder + '/kosdaq' + datetime + '.html')
+        writer = pd.ExcelWriter(pathfolder + '/kosdaq' +datetime + '.xlsx', engine='xlsxwriter')
         df.to_excel(writer, sheet_name='kosdaq')
         writer.save()
 # MakeDataFrameforDisplay(MakeDataStorage('CJ CGV'))

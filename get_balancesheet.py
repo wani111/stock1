@@ -2,25 +2,25 @@ from balancesheet_itooza import *
 from companycode import *
 import pandas as pd
 import os.path 
-from time_folder import pathfolder
+from time_folder import pathfolder, datetime
 
 def GetAllBalanceData() :
     for idx, items in stock_code.iterrows():
-        if not os.path.isfile('./financedata/kospi/Annualized/csv/' + items["Name"] + '.csv') :
+        if not os.path.isfile(pathfolder + '/kospi/Annualized/csv/' + items["Name"] + '.csv') :
             bs = GetBalanceSheet(items["Code"])
             if bs is not None :
                 print(f" Annualized {items['Name']}")
                 finance = MakeDataFrame(bs)
-                finance.to_html('./financedata/kospi/Annualized/html/' + items["Name"] + '.html')
-                finance.to_csv('./financedata/kospi/Annualized/csv/' + items["Name"] + '.csv', encoding='utf-8-sig')
+                finance.to_html(pathfolder + '/kospi/Annualized/html/' + items["Name"] + '.html')
+                finance.to_csv(pathfolder + '/kospi/Annualized/csv/' + items["Name"] + '.csv', encoding='utf-8-sig')
         
-        if not os.path.isfile('./financedata/kospi/Year/csv/' + items["Name"] + '.csv') :    
+        if not os.path.isfile(pathfolder + '/kospi/Year/csv/' + items["Name"] + '.csv') :    
             bs = GetBalanceSheet(items["Code"], 'Year')
             if bs is not None :    
                 print(f" Year       {items['Name']}")
                 finance = MakeDataFrame(bs)
-                finance.to_html('./financedata/kospi/Year/html/' + items["Name"] + '.html')
-                finance.to_csv('./financedata/kospi/Year/csv/' + items["Name"] + '.csv', encoding='utf-8-sig')
+                finance.to_html(pathfolder + '/kospi/Year/html/' + items["Name"] + '.html')
+                finance.to_csv(pathfolder + '/kospi/Year/csv/' + items["Name"] + '.csv', encoding='utf-8-sig')
                 # print(tabulate(finance, headers='keys', tablefmt='psql'))
 
 # GetAllBalanceData()
@@ -69,9 +69,9 @@ def MakeDataFrame(bs):
 def GetBalanceSheetFromCSV(company, type = 'Annualized') :
     stock_name = stock_code.iloc[stock_code.index[stock_code['Code'] == company]]['Name'].iloc[0]
     if(type == 'Annualized') :
-        df = pd.read_csv('./financedata/kospi/Annualized/csv/' + stock_name + '.csv', index_col = 0, na_filter = False)
+        df = pd.read_csv(pathfolder + '/kospi/Annualized/csv/' + stock_name + '.csv', index_col = 0, na_filter = False)
     elif(type == 'Year') :
-        df = pd.read_csv('./financedata/kospi/Year/csv/' + stock_name + '.csv', index_col = 0, na_filter = False)
+        df = pd.read_csv(pathfolder + '/kospi/Year/csv/' + stock_name + '.csv', index_col = 0, na_filter = False)
     else :
         print('GetBalanceSheetFromCSV Type is not correct')
     
@@ -81,25 +81,25 @@ def GetDataFrame(company, type = 'Annualized') :
     stock_name = stock_code.iloc[stock_code.index[stock_code['Code'] == company]]['Name'].iloc[0]
     
     if(type == 'Annualized') :
-        if True : #not os.path.isfile('./financedata/kospi/Annualized/csv/' + stock_name + '.csv') :
+        if not os.path.isfile(pathfolder + '/kospi/Annualized/csv/' + stock_name + '.csv') :
             bs = GetBalanceSheet(company, 'Annualized')
             if bs is not None :
                 print(f" Annualized {stock_name} data are crolled from Naver..")
                 finance = MakeDataFrame(bs)
-                finance.to_html('./financedata/kospi/Annualized/html/' + stock_name + '.html')
-                finance.to_csv('./financedata/kospi/Annualized/csv/' + stock_name + '.csv', encoding='utf-8-sig')
+                finance.to_html(pathfolder + '/kospi/Annualized/html/' + stock_name + '.html')
+                finance.to_csv(pathfolder + '/kospi/Annualized/csv/' + stock_name + '.csv', encoding='utf-8-sig')
         else :
             print(f" Annualized {stock_name} data are from CSV..")
             finance = GetBalanceSheetFromCSV(company, 'Annualized')
             
     elif(type == 'Year') :
-        if True : #not os.path.isfile('./financedata/kospi/Year/csv/' + stock_name + '.csv') :    
+        if not os.path.isfile(pathfolder + '/kospi/Year/csv/' + stock_name + '.csv') :    
             bs = GetBalanceSheet(company, 'Year')
             if bs is not None :    
                 print(f" Year {stock_name} data are crolled from Naver..")
                 finance = MakeDataFrame(bs)
-                finance.to_html('./financedata/kospi/Year/html/' + stock_name + '.html')
-                finance.to_csv('./financedata/kospi/Year/csv/' + stock_name + '.csv', encoding='utf-8-sig')
+                finance.to_html(pathfolder + '/kospi/Year/html/' + stock_name + '.html')
+                finance.to_csv(pathfolder + '/kospi/Year/csv/' + stock_name + '.csv', encoding='utf-8-sig')
                 # print(tabulate(finance, headers='keys', tablefmt='psql'))
         else :
             print(f" Year {stock_name} data are from CSV..")
