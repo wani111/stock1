@@ -125,16 +125,24 @@ def MakeDataStorage(company) :
         except ZeroDivisionError : Storage['PER'] = 'N/A'
         try : Storage['PBR'] = Storage['value'] / Storage['BPSq'] # 1 quarter roe geomean
         except ZeroDivisionError : Storage['PBR'] = 'N/A'
-        Storage['미래가치'] = pow((Storage['ROE3']+100)/100, 10) * Storage['BPSq']
-        Storage['기대ROE'] = (pow(Storage['미래가치'] / Storage['value'], 0.1)-1)*100 # 1 quarter roe geomean
-        Storage['가격5'] = Storage['미래가치'] / pow(1.05, 10) # 1 quarter roe geomean
-        Storage['이득5'] = Storage['가격5'] / Storage['value'] * 100 # 1 quarter roe geomean
-        Storage['가격10'] = Storage['미래가치'] / pow(1.10, 10) # 1 quarter roe geomean
-        Storage['이득10'] = Storage['가격10'] / Storage['value'] * 100 # 1 quarter roe geomean
-        Storage['가격15'] = Storage['미래가치'] / pow(1.15, 10) # 1 quarter roe geomean
-        Storage['이득15'] = Storage['가격15'] / Storage['value'] * 100 # 1 quarter roe geomean
-        Storage['가격20'] = Storage['미래가치'] / pow(1.20, 10) # 1 quarter roe geomean
-        Storage['이득20'] = Storage['가격20'] / Storage['value'] * 100 # 1 quarter roe geomean
+        Storage['FV10'] = pow((Storage['ROE10']+100)/100, 10) * Storage['BPSq']
+        Storage['FV5'] = pow((Storage['ROE5']+100)/100, 10) * Storage['BPSq']
+        Storage['FV3'] = pow((Storage['ROE3']+100)/100, 10) * Storage['BPSq']
+        Storage['FVy'] = pow((Storage['ROEy']+100)/100, 10) * Storage['BPSq']
+        Storage['FVq'] = pow((Storage['ROEq']+100)/100, 10) * Storage['BPSq']
+        Storage['EX10'] = (pow(Storage['FV10'] / Storage['value'], 0.1)-1)*100 # 1 quarter roe geomean
+        Storage['EX5'] = (pow(Storage['FV5'] / Storage['value'], 0.1)-1)*100 # 1 quarter roe geomean
+        Storage['EX3'] = (pow(Storage['FV3'] / Storage['value'], 0.1)-1)*100 # 1 quarter roe geomean
+        Storage['EXy'] = (pow(Storage['FVy'] / Storage['value'], 0.1)-1)*100 # 1 quarter roe geomean
+        Storage['EXq'] = (pow(Storage['FVq'] / Storage['value'], 0.1)-1)*100 # 1 quarter roe geomean
+        # Storage['가격5'] = Storage['미래가치'] / pow(1.05, 10) # 1 quarter roe geomean
+        # Storage['이득5'] = Storage['가격5'] / Storage['value'] * 100 # 1 quarter roe geomean
+        # Storage['가격10'] = Storage['미래가치'] / pow(1.10, 10) # 1 quarter roe geomean
+        # Storage['이득10'] = Storage['가격10'] / Storage['value'] * 100 # 1 quarter roe geomean
+        # Storage['가격15'] = Storage['미래가치'] / pow(1.15, 10) # 1 quarter roe geomean
+        # Storage['이득15'] = Storage['가격15'] / Storage['value'] * 100 # 1 quarter roe geomean
+        # Storage['가격20'] = Storage['미래가치'] / pow(1.20, 10) # 1 quarter roe geomean
+        # Storage['이득20'] = Storage['가격20'] / Storage['value'] * 100 # 1 quarter roe geomean
     # print(Storage)
     return Storage
     

@@ -6,11 +6,15 @@ dt_today = datetime.today()
 dt_modi = dt_today
 # mon = 0, thu = 1, wed = 2 , thr = 3 , fri = 4, sat = 5, sun = 6
 if(dt_today.weekday() == 0) :
-    if(dt_today.hour <= 15 and dt_today.minute < 40) :
+    if(dt_today.hour < 15) :
         dt_modi = dt_today - timedelta(3)
+    elif(dt_today.hour == 15 and dt_today.minute < 40) :
+         dt_modi = dt_today - timedelta(3)
 elif(dt_today.weekday() >= 1 and dt_today.weekday() <= 4): 
-    if(dt_today.hour <= 15 and dt_today.minute < 40) :
+    if(dt_today.hour < 15) :
         dt_modi = dt_today - timedelta(1)
+    elif(dt_today.hour == 15 and dt_today.minute < 40) :
+         dt_modi = dt_today - timedelta(1)   
 elif(dt_today.weekday() == 5) :
     dt_modi = dt_today - timedelta(1)
 elif(dt_today.weekday() == 6):

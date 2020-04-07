@@ -24,12 +24,46 @@ for idx, items in kospi_stock_code.iterrows() :
     try : MakeDataFrameforDisplay(MakeDataStorage(items['Name']))
     except : 
         print(f"Fail... {items['Name']}")
-        break
+        continue
     finally :
         df = pd.DataFrame(DataList)
         df.to_html(pathfolder + '/kospi' + datetime + '.html')
         writer = pd.ExcelWriter(pathfolder + '/kospi' +datetime + '.xlsx', engine='xlsxwriter')
         df.to_excel(writer, sheet_name='kospi')
+        
+        workbook = writer.book
+        worksheet = writer.sheets['kospi']
+        worksheet.autofilter('A1:X1')
+
+        # Light red fill with dark red text.
+        format1 = workbook.add_format({'bg_color':   '#FFC7CE',
+                                      'font_color': '#9C0006'})
+
+        # Light yellow fill with dark yellow text.
+        format2 = workbook.add_format({'bg_color':   '#FFEB9C',
+                                      'font_color': '#9C6500'})
+
+        # Green fill with dark green text.
+        format3 = workbook.add_format({'bg_color':   '#C6EFCE',
+                                      'font_color': '#006100'})
+
+        worksheet.conditional_format('T2:X2000', {'type':     'cell',
+                                                'criteria': 'greater than',
+                                                'value':    24,
+                                                'format':   format3})
+
+        worksheet.conditional_format('T2:X2000', {'type':     'cell',
+                                                'criteria': 'between',
+                                                'minimum' : 16,
+                                                'maximum' : 24,
+                                                'format':   format1})
+
+        worksheet.conditional_format('T2:X2000', {'type':     'cell',
+                                                'criteria': 'between',
+                                                'minimum' : 8,
+                                                'maximum' : 16,
+                                                'format':   format2})
+
         writer.save()
 # MakeDataFrameforDisplay(MakeDataStorage('CJ CGV'))
 # MakeDataFrameforDisplay(MakeDataStorage('CJ ENM'))
