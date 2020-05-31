@@ -1,6 +1,19 @@
 from balancesheet_itooza import *
 from time_folder import pathfolder, datetime
+import time
 
+start = time.time()
+
+kospipathfolder = './financedata/' + datetime +'/kospi/'
+if(not os.path.isdir(kospipathfolder)):
+  os.mkdir(kospipathfolder)
+  os.mkdir(kospipathfolder + '/Annualized')
+  os.mkdir(kospipathfolder + '/Year')
+  os.mkdir(kospipathfolder + '/Annualized/csv')
+  os.mkdir(kospipathfolder + '/Annualized/html')
+  os.mkdir(kospipathfolder + '/Year/csv')
+  os.mkdir(kospipathfolder + '/Year/html')
+  
 MakeDataFrameforDisplay(MakeDataStorage('엠씨넥스'))
 MakeDataFrameforDisplay(MakeDataStorage('한국금융지주'))
 MakeDataFrameforDisplay(MakeDataStorage('케이씨'))
