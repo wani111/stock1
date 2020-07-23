@@ -4,16 +4,19 @@ import time
 
 start = time.time()
 
-kospipathfolder = './financedata/' + datetime +'/kospi/'
+kospipathfolder = './financedata/' + datetime + '/kospi/'
 if(not os.path.isdir(kospipathfolder)):
-  os.mkdir(kospipathfolder)
-  os.mkdir(kospipathfolder + '/Annualized')
-  os.mkdir(kospipathfolder + '/Year')
-  os.mkdir(kospipathfolder + '/Annualized/csv')
-  os.mkdir(kospipathfolder + '/Annualized/html')
-  os.mkdir(kospipathfolder + '/Year/csv')
-  os.mkdir(kospipathfolder + '/Year/html')
-  
+    os.mkdir(kospipathfolder)
+    os.mkdir(kospipathfolder + '/Annualized')
+    os.mkdir(kospipathfolder + '/Year')
+    os.mkdir(kospipathfolder + '/Quarter')
+    os.mkdir(kospipathfolder + '/Annualized/csv')
+    os.mkdir(kospipathfolder + '/Annualized/html')
+    os.mkdir(kospipathfolder + '/Year/csv')
+    os.mkdir(kospipathfolder + '/Year/html')
+    os.mkdir(kospipathfolder + '/Quarter/csv')
+    os.mkdir(kospipathfolder + '/Quarter/html')
+
 MakeDataFrameforDisplay(MakeDataStorage('엠씨넥스'))
 MakeDataFrameforDisplay(MakeDataStorage('한국금융지주'))
 MakeDataFrameforDisplay(MakeDataStorage('케이씨'))
@@ -29,7 +32,7 @@ MakeDataFrameforDisplay(MakeDataStorage('SK하이닉스'))
 
 df = pd.DataFrame(DataList)
 df.to_html(pathfolder + '/MyStock' + datetime + '.html')
-writer = pd.ExcelWriter(pathfolder + '/MyStock' +datetime + '.xlsx', engine='xlsxwriter')
+writer = pd.ExcelWriter(pathfolder + '/MyStock' + datetime + '.xlsx', engine='xlsxwriter')
 df.to_excel(writer, sheet_name='MyStock')
 
 workbook = writer.book
@@ -49,19 +52,19 @@ format3 = workbook.add_format({'bg_color':   '#C6EFCE',
                                'font_color': '#006100'})
 
 worksheet.conditional_format('T2:X2000', {'type':     'cell',
-                                        'criteria': 'greater than',
-                                        'value':    24,
-                                        'format':   format3})
+                                          'criteria': 'greater than',
+                                          'value':    24,
+                                          'format':   format3})
 
 worksheet.conditional_format('T2:X2000', {'type':     'cell',
-                                        'criteria': 'between',
-                                        'minimum' : 16,
-                                        'maximum' : 24,
-                                        'format':   format1})
+                                          'criteria': 'between',
+                                          'minimum': 16,
+                                          'maximum': 24,
+                                          'format':   format1})
 
 worksheet.conditional_format('T2:X2000', {'type':     'cell',
-                                        'criteria': 'between',
-                                        'minimum' : 8,
-                                        'maximum' : 16,
-                                        'format':   format2})
+                                          'criteria': 'between',
+                                          'minimum': 8,
+                                          'maximum': 16,
+                                          'format':   format2})
 writer.save()

@@ -1,3 +1,4 @@
 {
-	"python.pythonPath": "C:\\Users\\kingw\\AppData\\Local\\conda\\conda\\envs\\stock_program_env\\python.exe"
+	"python.pythonPath": "C:\\Users\\kingw\\AppData\\Local\\conda\\conda\\envs\\stock_program_env\\python.exe",
+	"editor.tabSize": 2
 }
