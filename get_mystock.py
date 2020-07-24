@@ -4,18 +4,6 @@ import time
 
 start = time.time()
 
-kospipathfolder = './financedata/' + datetime + '/kospi/'
-if(not os.path.isdir(kospipathfolder)):
-    os.mkdir(kospipathfolder)
-    os.mkdir(kospipathfolder + '/Annualized')
-    os.mkdir(kospipathfolder + '/Year')
-    os.mkdir(kospipathfolder + '/Quarter')
-    os.mkdir(kospipathfolder + '/Annualized/csv')
-    os.mkdir(kospipathfolder + '/Annualized/html')
-    os.mkdir(kospipathfolder + '/Year/csv')
-    os.mkdir(kospipathfolder + '/Year/html')
-    os.mkdir(kospipathfolder + '/Quarter/csv')
-    os.mkdir(kospipathfolder + '/Quarter/html')
 
 MakeDataFrameforDisplay(MakeDataStorage('엠씨넥스'))
 MakeDataFrameforDisplay(MakeDataStorage('한국금융지주'))

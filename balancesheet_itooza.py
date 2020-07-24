@@ -132,7 +132,7 @@ def MakeDataStorage(company):
         print(f"Failing   ... {Storage['name']} Year BalanceSheet can't be crolled")
         return None
     if(Storage['bs_Quarter'] is None):
-        print(f"Failing   ... {Storage['name']} Quearter BalanceSheet can't be crolled")
+        print(f"Failing   ... {Storage['name']} Quarter BalanceSheet can't be crolled")
         return None
 
     if(Storage['code'] is not None):

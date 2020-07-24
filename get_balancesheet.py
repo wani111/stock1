@@ -3,6 +3,7 @@ from companycode import *
 import pandas as pd
 import os.path
 from time_folder import pathfolder, datetime
+import time
 
 
 def GetAllBalanceData():
@@ -28,16 +29,28 @@ def GetAllBalanceData():
 
 
 def GetBalanceSheet(company_code, type='Annualized'):
-    url = "http://search.itooza.com/index.htm?seName=" + company_code
-    r = get(url)
-    soup = BeautifulSoup(r.content.decode('euc-kr', 'replace'), 'html.parser')
-    if(type == 'Annualized'):
-        table = soup.find("div", {"id": "indexTable1"})
-    elif(type == 'Year'):
-        table = soup.find("div", {"id": "indexTable2"})
-    elif(type == 'Quarter'):
-        table = soup.find("div", {"id": "indexTable3"})
-    # print(table)
+    loop_cnt = 0
+    while True:
+        url = "http://search.itooza.com/index.htm?seName=" + company_code
+        r = get(url)
+        soup = BeautifulSoup(r.content.decode('euc-kr', 'replace'), 'html.parser')
+        if soup == None:
+            print(f'Error soup is None {soup}')
+        loop_cnt = loop_cnt + 1
+        if(type == 'Annualized'):
+            table = soup.find("div", {"id": "indexTable1"})
+        elif(type == 'Year'):
+            table = soup.find("div", {"id": "indexTable2"})
+        elif(type == 'Quarter'):
+            table = soup.find("div", {"id": "indexTable3"})
+        if table != None:
+            break
+        else:
+            print(f'''Fail Cnt:{loop_cnt} 
+                      url:{url}
+                      r:{r}
+                      table:{table}''')
+            time.sleep(1)
     return table
 
 
@@ -81,6 +94,7 @@ def GetDataFrame(company, type='Annualized'):
     stock_name = stock_code.iloc[stock_code.index[stock_code['Code'] == company]]['Name'].iloc[0]
 
     if not os.path.isfile(pathfolder + '/kospi/' + type + '/csv/' + stock_name + '.csv'):
+        # print(f'GetDataFrame csv file do not exist')
         bs = GetBalanceSheet(company, type)
         if bs is not None:
             print(f" {type} {stock_name} data are crolled from Naver..")
