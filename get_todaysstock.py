@@ -79,17 +79,14 @@ MakeDataFrameforDisplay(MakeDataStorage('파마리서치프로덕트'))
 MakeDataFrameforDisplay(MakeDataStorage('샘표식품'))
 
 
-
-
-
 df = pd.DataFrame(DataList)
 df.to_html(pathfolder + '/today' + datetime + '.html')
-writer = pd.ExcelWriter(pathfolder + '/today' +datetime + '.xlsx', engine='xlsxwriter')
+writer = pd.ExcelWriter(pathfolder + '/today' + datetime + '.xlsx', engine='xlsxwriter')
 df.to_excel(writer, sheet_name='today')
 
 workbook = writer.book
 worksheet = writer.sheets['today']
-worksheet.autofilter('A1:X1')
+worksheet.autofilter('A1:Y1')
 
 # Light red fill with dark red text.
 format1 = workbook.add_format({'bg_color':   '#FFC7CE',
@@ -103,21 +100,20 @@ format2 = workbook.add_format({'bg_color':   '#FFEB9C',
 format3 = workbook.add_format({'bg_color':   '#C6EFCE',
                                'font_color': '#006100'})
 
-worksheet.conditional_format('T2:X2000', {'type':     'cell',
-                                        'criteria': 'greater than',
-                                        'value':    24,
-                                        'format':   format3})
+worksheet.conditional_format('T2:Y2000', {'type':     'cell',
+                                          'criteria': 'greater than',
+                                          'value':    24,
+                                          'format':   format3})
 
-worksheet.conditional_format('T2:X2000', {'type':     'cell',
-                                        'criteria': 'between',
-                                        'minimum' : 16,
-                                        'maximum' : 24,
-                                        'format':   format1})
+worksheet.conditional_format('T2:Y2000', {'type':     'cell',
+                                          'criteria': 'between',
+                                          'minimum': 16,
+                                          'maximum': 24,
+                                          'format':   format1})
 
-worksheet.conditional_format('T2:X2000', {'type':     'cell',
-                                        'criteria': 'between',
-                                        'minimum' : 8,
-                                        'maximum' : 16,
-                                        'format':   format2})
+worksheet.conditional_format('T2:Y2000', {'type':     'cell',
+                                          'criteria': 'between',
+                                          'minimum': 8,
+                                          'maximum': 16,
+                                          'format':   format2})
 writer.save()
-

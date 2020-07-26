@@ -23,7 +23,7 @@ for idx, items in kospi_stock_code.iterrows():
 
         workbook = writer.book
         worksheet = writer.sheets['kospi']
-        worksheet.autofilter('A1:X1')
+        worksheet.autofilter('A1:Y1')
 
         # Light red fill with dark red text.
         format1 = workbook.add_format({'bg_color':   '#FFC7CE',
@@ -37,18 +37,18 @@ for idx, items in kospi_stock_code.iterrows():
         format3 = workbook.add_format({'bg_color':   '#C6EFCE',
                                        'font_color': '#006100'})
 
-        worksheet.conditional_format('T2:X2000', {'type':     'cell',
+        worksheet.conditional_format('T2:Y2000', {'type':     'cell',
                                                   'criteria': 'greater than',
                                                   'value':    24,
                                                   'format':   format3})
 
-        worksheet.conditional_format('T2:X2000', {'type':     'cell',
+        worksheet.conditional_format('T2:Y2000', {'type':     'cell',
                                                   'criteria': 'between',
                                                   'minimum': 16,
                                                   'maximum': 24,
                                                   'format':   format1})
 
-        worksheet.conditional_format('T2:X2000', {'type':     'cell',
+        worksheet.conditional_format('T2:Y2000', {'type':     'cell',
                                                   'criteria': 'between',
                                                   'minimum': 8,
                                                   'maximum': 16,
