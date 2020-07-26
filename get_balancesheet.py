@@ -30,7 +30,7 @@ def GetAllBalanceData():
 
 def GetBalanceSheet(company_code, type='Annualized'):
     loop_cnt = 0
-    while True:
+    while loop_cnt < 20:
         url = "http://search.itooza.com/index.htm?seName=" + company_code
         r = get(url)
         soup = BeautifulSoup(r.content.decode('euc-kr', 'replace'), 'html.parser')
