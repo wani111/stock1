@@ -1,24 +1,29 @@
 from balancesheet_itooza import *
 from time_folder import pathfolder, datetime
 import time
+from multiprocessing import Pool  # Pool import하기
 
 start = time.time()
 
 
-MakeDataFrameforDisplay(MakeDataStorage('엠씨넥스'))
-MakeDataFrameforDisplay(MakeDataStorage('한국금융지주'))
-MakeDataFrameforDisplay(MakeDataStorage('케이씨'))
-MakeDataFrameforDisplay(MakeDataStorage('아세아제지'))
-MakeDataFrameforDisplay(MakeDataStorage('에스에이엠티'))
-MakeDataFrameforDisplay(MakeDataStorage('월덱스'))
-MakeDataFrameforDisplay(MakeDataStorage('S&K폴리텍'))
-MakeDataFrameforDisplay(MakeDataStorage('인탑스'))
-MakeDataFrameforDisplay(MakeDataStorage('제노레이'))
-MakeDataFrameforDisplay(MakeDataStorage('삼성전자'))
-MakeDataFrameforDisplay(MakeDataStorage('SK하이닉스'))
+# MakeDataStorage('엠씨넥스')
+# MakeDataStorage('한국금융지주')
+# MakeDataStorage('케이씨')
+# MakeDataStorage('아세아제지')
+# MakeDataStorage('에스에이엠티')
+# MakeDataStorage('월덱스')
+# MakeDataStorage('인탑스')
+# MakeDataStorage('제노레이')
+# MakeDataStorage('삼성전자')
+# MakeDataStorage('SK하이닉스')
 
+lists = ['엠씨넥스', '한국금융지주', '케이씨', '아세아제지', '에스에이엠티', '월덱스', '인탑스', '제노레이', '삼성전자', 'SK하이닉스']
+# freeze_support()
+pool = Pool(processes=8)  # 4개의 프로세스를 사용합니다.
+pool.map(MakeDataStorage, lists)  # get_contetn 함수를 넣어줍시다.
+pool.close()
+pool.join()
 
-df = pd.DataFrame(DataList)
 df.to_html(pathfolder + '/MyStock' + datetime + '.html')
 writer = pd.ExcelWriter(pathfolder + '/MyStock' + datetime + '.xlsx', engine='xlsxwriter')
 df.to_excel(writer, sheet_name='MyStock')
@@ -56,3 +61,4 @@ worksheet.conditional_format('T2:Y2000', {'type':     'cell',
                                           'maximum': 16,
                                           'format':   format2})
 writer.save()
+print(f"time : {time.time() - start}s")  # 현재시각 - 시작시간 = 실행 시간

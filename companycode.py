@@ -11,4 +11,4 @@ kospi_stock_code = kospi_stock_data[["Code", "Name"]]
 kosdaq_stock_data = pd.read_csv("kosdaq.csv", low_memory=False, dtype=str)
 kosdaq_stock_code = kosdaq_stock_data[["Code", "Name"]]
 
-#print(stock_code)
+# print(f'{stock_data["Code"].tolist()}  {type(stock_data["Code"].tolist())}')

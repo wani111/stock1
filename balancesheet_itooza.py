@@ -187,7 +187,9 @@ def MakeDataStorage(company):
         # Storage['가격20'] = Storage['미래가치'] / pow(1.20, 10) # 1 quarter roe geomean
         # Storage['이득20'] = Storage['가격20'] / Storage['value'] * 100 # 1 quarter roe geomean
     # print(Storage)
-    return Storage
+
+    MakeDataFrameforDisplay(Storage)
+    # return Storage
 
 
 # GetImportantData(MakeDataStorage('삼성전자'))

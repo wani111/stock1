@@ -11,7 +11,7 @@ start = time.time()
 
 for idx, items in kosdaq_stock_code.iterrows():
     try:
-        MakeDataFrameforDisplay(MakeDataStorage(items['Name']))
+        MakeDataStorage(items['Name'])
     except:
         print(f"Fail... {items['Name']}")
         continue
