@@ -104,24 +104,31 @@ def GetAllo(finance, num=1, type='run'):
 
 def MakeDataStorage(company):
     Storage = {}
+    Table = {}
     # Storage['code'] = company
     Storage['code'] = stock_code.iloc[stock_code.index[stock_code['Name'] == company]]['Code'].iloc[0]
     #Storage['name'] = stock_code.iloc[stock_code.index[stock_code['Code'] == company]]['Name'].iloc[0]
     Storage['name'] = company
     company_code = Storage['code']
     # print(Storage['code'])
+
+    Table = GetBalanceSheetFromInternet(company_code)
+    # print(Table)
     try:
-        Storage['bs_Annualized'] = GetDataFrame(company_code, 'Annualized')
+        # Storage['bs_Annualized'] = GetDataFrame(company_code, 'Annualized')
+        Storage['bs_Annualized'] = GetDataFrameFromTable(company_code, 'Annualized', Table['Annualized'])
     except:
         Storage['bs_Annualized'] = None
     # print(f"{Storage['bs_Annualized']}")
     try:
-        Storage['bs_Year'] = GetDataFrame(company_code, 'Year')
+        # Storage['bs_Year'] = GetDataFrame(company_code, 'Year')
+        Storage['bs_Year'] = GetDataFrameFromTable(company_code, 'Year', Table['Year'])
     except:
         Storage['bs_Year'] = None
 
     try:
-        Storage['bs_Quarter'] = GetDataFrame(company_code, 'Quarter')
+        # Storage['bs_Quarter'] = GetDataFrame(company_code, 'Quarter')
+        Storage['bs_Quarter'] = GetDataFrameFromTable(company_code, 'Quarter', Table['Quarter'])
     except:
         Storage['bs_Quarter'] = None
 

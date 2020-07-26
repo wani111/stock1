@@ -90,6 +90,43 @@ def GetBalanceSheetFromCSV(company, type='Annualized'):
     return df
 
 
+def GetBalanceSheetFromInternet(company_code):
+    loop_cnt = 0
+    while loop_cnt < 20:
+        url = "http://search.itooza.com/index.htm?seName=" + company_code
+        r = get(url)
+        soup = BeautifulSoup(r.content.decode('euc-kr', 'replace'), 'html.parser')
+        if soup == None:
+            print(f'Error soup is None {soup}')
+        loop_cnt = loop_cnt + 1
+        Annualized_table = soup.find("div", {"id": "indexTable1"})
+        Year_table = soup.find("div", {"id": "indexTable2"})
+        Quarter_table = soup.find("div", {"id": "indexTable3"})
+        if (Annualized_table != None) and (Year_table != None) and (Quarter_table != None):
+            break
+        else:
+            print(f'''Fail Cnt:{loop_cnt} 
+                      url:{url}
+                      r:{r}
+                      table:{table}''')
+            time.sleep(1)
+    return {'Annualized': Annualized_table, 'Year': Year_table, 'Quarter': Quarter_table}
+
+
+def GetDataFrameFromTable(company, type, Table):
+    stock_name = stock_code.iloc[stock_code.index[stock_code['Code'] == company]]['Name'].iloc[0]
+    if not os.path.isfile(pathfolder + '/kospi/' + type + '/csv/' + stock_name + '.csv'):
+        if Table is not None:
+            print(f" {type} {stock_name} data are crolled from Naver..")
+            finance = MakeDataFrame(Table)
+            finance.to_html(pathfolder + '/kospi/' + type + '/csv/' + stock_name + '.html')
+            finance.to_csv(pathfolder + '/kospi/' + type + '/csv/' + stock_name + '.csv', encoding='utf-8-sig')
+    else:
+        print(f" {type} {stock_name} data are from CSV..")
+        finance = GetBalanceSheetFromCSV(company, type)
+    return finance
+
+
 def GetDataFrame(company, type='Annualized'):
     stock_name = stock_code.iloc[stock_code.index[stock_code['Code'] == company]]['Name'].iloc[0]
 
