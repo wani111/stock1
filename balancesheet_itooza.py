@@ -9,6 +9,7 @@ from companycode import stock_code
 from get_balancesheet import *
 import os.path
 from statistics import geometric_mean
+import multiprocessing
 
 
 def get_bs_obj(company_code):
@@ -19,13 +20,16 @@ def get_bs_obj(company_code):
 
 
 def get_price(company_code):
-    #print("get_price " + company_code)
-    bs_obj = get_bs_obj(company_code)
-    no_today = bs_obj.find("p", {"class": "no_today"})
-    blind = no_today.find("span", {"class": "blind"})
-    now_price = blind.text
-    # print(f'price is {now_price}')
-    return int(now_price.replace(',', ''))
+    # print("get_price " + company_code)
+    try:
+        bs_obj = get_bs_obj(company_code)
+        no_today = bs_obj.find("p", {"class": "no_today"})
+        blind = no_today.find("span", {"class": "blind"})
+        now_price = blind.text
+        # print(f'price is {now_price}')
+        return int(now_price.replace(',', ''))
+    except:
+        return 1
 
 
 def isfloat(value):
@@ -46,7 +50,7 @@ def GetGeoMeanROE(finance, num=0):
     # print(a)
     ROE = [float(value) + 100 for value in ROE if isfloat(value)]
     roes = [value for value in ROE][0:(lambda x: len(ROE) if x == 0 else x)(num)]
-    #print(f'roes datas are {roes}')
+    # print(f'roes datas are {roes}')
     # newroe = []
     # for data in roes:
     #     if isfloat(data) :
@@ -107,7 +111,7 @@ def MakeDataStorage(company):
     Table = {}
     # Storage['code'] = company
     Storage['code'] = stock_code.iloc[stock_code.index[stock_code['Name'] == company]]['Code'].iloc[0]
-    #Storage['name'] = stock_code.iloc[stock_code.index[stock_code['Code'] == company]]['Name'].iloc[0]
+    # Storage['name'] = stock_code.iloc[stock_code.index[stock_code['Code'] == company]]['Name'].iloc[0]
     Storage['name'] = company
     company_code = Storage['code']
     # print(Storage['code'])
@@ -134,13 +138,13 @@ def MakeDataStorage(company):
 
     if(Storage['bs_Annualized'] is None):
         print(f"Failing   ... {Storage['name']} Annualized BalanceSheet can't be crolled")
-        return None
+        return Storage
     if(Storage['bs_Year'] is None):
         print(f"Failing   ... {Storage['name']} Year BalanceSheet can't be crolled")
-        return None
+        return Storage
     if(Storage['bs_Quarter'] is None):
         print(f"Failing   ... {Storage['name']} Quarter BalanceSheet can't be crolled")
-        return None
+        return Storage
 
     if(Storage['code'] is not None):
         Storage['value'] = get_price(company_code)
@@ -196,7 +200,9 @@ def MakeDataStorage(company):
 # d = pd.DataFrame(list(MakeDataStorage('삼성전자').items()), columns=['name', 'vaule', 'ROE10', 'ROE5', 'ROE3', 'ROEy', 'ROEq', 'EPSq', \
 #     'BPSq', '배당', 'PER', 'PBR', '미래가치', '기대ROE', '가격5', '이득5', '가격10', '이득10', '가격15', '이득15', '가격20', '이득20'])
 df = pd.DataFrame()
-DataList = []
+manager = multiprocessing.Manager()
+DataList = manager.list()
+# DataList = []
 
 
 def MakeDataFrameforDisplay(Data):
@@ -211,7 +217,7 @@ def MakeDataFrameforDisplay(Data):
 
 
 # print(df)
-#d = pd.DataFrame(list(MakeDataStorage('삼성전자').items()), columns=['name'])
+# d = pd.DataFrame(list(MakeDataStorage('삼성전자').items()), columns=['name'])
 # print(d)
 # DBlist.append(MakeDataStorage('SK하이닉스'))
 # DBlist.append(MakeDataStorage('카카오'))
@@ -225,7 +231,7 @@ def MakeDataFrameforDisplay(Data):
 # for datas in DBlist :
 #     print(f" {datas['name']}'s ROE3 is {datas['ROE3']}")
 
-#finance = MakeDataFrame(GetBalanceSheet("005930"))
+# finance = MakeDataFrame(GetBalanceSheet("005930"))
 
 # print(tabulate(finance, headers='keys', tablefmt='psql'))
 # print(finance.describe())

@@ -4,6 +4,7 @@ import pandas as pd
 import os.path
 from time_folder import pathfolder, datetime
 import time
+from random import randint
 
 
 def GetAllBalanceData():
@@ -91,25 +92,48 @@ def GetBalanceSheetFromCSV(company, type='Annualized'):
 
 
 def GetBalanceSheetFromInternet(company_code):
+    stock_name = stock_code.iloc[stock_code.index[stock_code['Code'] == company_code]]['Name'].iloc[0]
+    Annualized_table = {}
+    Year_table = {}
+    Quarter_table = {}
     loop_cnt = 0
-    while loop_cnt < 20:
-        url = "http://search.itooza.com/index.htm?seName=" + company_code
-        r = get(url)
-        soup = BeautifulSoup(r.content.decode('euc-kr', 'replace'), 'html.parser')
-        if soup == None:
-            print(f'Error soup is None {soup}')
-        loop_cnt = loop_cnt + 1
-        Annualized_table = soup.find("div", {"id": "indexTable1"})
-        Year_table = soup.find("div", {"id": "indexTable2"})
-        Quarter_table = soup.find("div", {"id": "indexTable3"})
-        if (Annualized_table != None) and (Year_table != None) and (Quarter_table != None):
-            break
-        else:
-            print(f'''Fail Cnt:{loop_cnt} 
-                      url:{url}
-                      r:{r}
-                      table:{table}''')
-            time.sleep(1)
+    if not os.path.isfile(pathfolder + '/kospi/Quarter/csv/' + stock_name + '.csv'):
+        folder = pathfolder + '/kospi/' + '/txt/' + stock_name + '.html'
+        while loop_cnt < 10:
+            url = "http://search.itooza.com/index.htm?seName=" + company_code
+            headers = {
+                "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_5) AppleWebKit 537.36 (KHTML, like Gecko) Chrome",
+                "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8"
+            }
+            proxies = {
+                'http': 'socks5://127.0.0.1:9050',
+                'https': 'socks5://127.0.0.1:9050'
+            }
+            r = get(url, headers=headers, proxies=proxies)
+            r.encoding = 'utf-8'
+
+            with open(folder, 'w') as f:
+                f.write(r.text)
+            # print(r.content.decode('euc-kr', 'replace'))
+            # if(r.content == 'ISO-8859-1'):
+            # soup = BeautifulSoup(r.content.decode('euc-kr', 'replace'), 'html.parser')
+            # else:
+            soup = BeautifulSoup(r.content, 'html.parser', from_encoding='utf-8')
+
+            if soup == None:
+                print(f'Error soup is None {soup}')
+            loop_cnt = loop_cnt + 1
+            Annualized_table = soup.find("div", {"id": "indexTable1"})
+            Year_table = soup.find("div", {"id": "indexTable2"})
+            Quarter_table = soup.find("div", {"id": "indexTable3"})
+            if (Annualized_table != None) and (Year_table != None) and (Quarter_table != None):
+                print(f'Company_code:{stock_name}, r:{r.encoding}')
+                break
+            else:
+                print(f'Company_code:{stock_name}, Fail Cnt:{loop_cnt}, r:{r.encoding}')
+                MAX_SLEEP_TIME = 2
+                rand_value = randint(1, MAX_SLEEP_TIME)
+                time.sleep(rand_value)
     return {'Annualized': Annualized_table, 'Year': Year_table, 'Quarter': Quarter_table}
 
 

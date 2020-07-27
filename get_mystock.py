@@ -17,7 +17,8 @@ start = time.time()
 # MakeDataStorage('삼성전자')
 # MakeDataStorage('SK하이닉스')
 
-lists = ['엠씨넥스', '한국금융지주', '케이씨', '아세아제지', '에스에이엠티', '월덱스', '인탑스', '제노레이', '삼성전자', 'SK하이닉스']
+# lists = ['엠씨넥스', '한국금융지주', '케이씨', '아세아제지', '에스에이엠티', '월덱스', '인탑스', '제노레이', '삼성전자', 'SK하이닉스']
+lists = ['CJ CGV', 'CJ씨푸드', 'DB손해보험', 'F&F', 'HDC현대산업개발', 'KB금융', 'KC코트렐', 'KPX홀딩스', 'LG하우시스', 'LS']
 # freeze_support()
 pool = Pool(processes=8)  # 4개의 프로세스를 사용합니다.
 pool.map(MakeDataStorage, lists)  # get_contetn 함수를 넣어줍시다.
