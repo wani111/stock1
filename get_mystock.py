@@ -18,13 +18,45 @@ start = time.time()
 # MakeDataStorage('SK하이닉스')
 
 # lists = ['엠씨넥스', '한국금융지주', '케이씨', '아세아제지', '에스에이엠티', '월덱스', '인탑스', '제노레이', '삼성전자', 'SK하이닉스']
-lists = ['CJ CGV', 'CJ씨푸드', 'DB손해보험', 'F&F', 'HDC현대산업개발', 'KB금융', 'KC코트렐', 'KPX홀딩스', 'LG하우시스', 'LS']
+# lists = ['CJ CGV', 'CJ씨푸드', 'DB손해보험', 'F&F', 'HDC현대산업개발', 'KB금융', 'KC코트렐', 'KPX홀딩스', 'LG하우시스', 'LS']
+
+lists = ['GST',
+         'KCI',
+         'KG ETS',
+         'KG이니시스',
+         '고려신용정보',
+         '나이스디앤비',
+         '동성화인텍',
+         '비엠티',
+         '비츠로테크',
+         '서린바이오',
+         '어보브반도체',
+         '에스티아이',
+         '에이치시티',
+         '오이솔루션',
+         '와이엔텍',
+         '윈스',
+         '이엔에프테크놀로지',
+         '이엠넷',
+         '이크레더블',
+         '인선이엔티',
+         '제이티',
+         '케이엠',
+         '케이엠더블유',
+         '코미코',
+         '클래시스',
+         '토탈소프트',
+         '피앤이솔루션',
+         '한국기업평가']
+
+
 # freeze_support()
 pool = Pool(processes=8)  # 4개의 프로세스를 사용합니다.
 pool.map(MakeDataStorage, lists)  # get_contetn 함수를 넣어줍시다.
 pool.close()
 pool.join()
 
+df = pd.DataFrame(list(DataList))
 df.to_html(pathfolder + '/MyStock' + datetime + '.html')
 writer = pd.ExcelWriter(pathfolder + '/MyStock' + datetime + '.xlsx', engine='xlsxwriter')
 df.to_excel(writer, sheet_name='MyStock')
