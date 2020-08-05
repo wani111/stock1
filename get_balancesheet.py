@@ -112,8 +112,9 @@ def GetBalanceSheetFromInternet(company_code):
             r = get(url, headers=headers, proxies=proxies)
             r.encoding = 'utf-8'
 
-            with open(folder, 'w') as f:
-                f.write(r.text)
+            # with open(folder, 'w') as f:
+            #     f.write(r.text)
+            
             # print(r.content.decode('euc-kr', 'replace'))
             # if(r.content == 'ISO-8859-1'):
             # soup = BeautifulSoup(r.content.decode('euc-kr', 'replace'), 'html.parser')
