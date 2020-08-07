@@ -2,7 +2,8 @@ from balancesheet_itooza import *
 from time_folder import pathfolder, datetime
 import time
 from multiprocessing import Pool  # Pool import하기
-
+import sys
+from run import *
 start = time.time()
 
 
@@ -49,12 +50,7 @@ lists = ['GST',
          '피앤이솔루션',
          '한국기업평가']
 
-
-# freeze_support()
-pool = Pool(processes=8)  # 4개의 프로세스를 사용합니다.
-pool.map(MakeDataStorage, lists)  # get_contetn 함수를 넣어줍시다.
-pool.close()
-pool.join()
+run_multiprocess(lists)
 
 df = pd.DataFrame(list(DataList))
 df.to_html(pathfolder + '/MyStock' + datetime + '.html')

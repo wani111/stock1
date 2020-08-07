@@ -5,7 +5,7 @@ import pandas as pd
 from time_folder import pathfolder, datetime
 from multiprocessing import Pool  # Pool import하기
 import sys
-
+from run import *
 log = open('log.txt', 'w', encoding='utf-8')
 #     print(bs, file=bstable)
 
@@ -59,17 +59,7 @@ start = time.time()
 #         writer.save()
 
 lists = kosdaq_stock_code["Name"].tolist()
-pool = Pool(processes=8)  #
-try:
-    pool.map(MakeDataStorage, lists)
-    # print(f'1 {DataList}')
-except Exception as e:
-    print(e)
-    sys.exit(1)
-
-
-pool.close()
-pool.join()
+run_multiprocess(lists)
 df = pd.DataFrame(list(DataList))
 df.to_html(pathfolder + '/kosdaq' + datetime + '.html')
 writer = pd.ExcelWriter(pathfolder + '/kosdaq' + datetime + '.xlsx', engine='xlsxwriter')

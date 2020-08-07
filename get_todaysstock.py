@@ -1,6 +1,11 @@
 from balancesheet_itooza import *
 from time_folder import pathfolder, datetime
 from multiprocessing import Pool  # Pool import하기
+import sys
+from run import *
+import time
+
+start = time.time()
 
 lists = ['KG케미칼',
          '동남합성',
@@ -33,11 +38,7 @@ lists = ['KG케미칼',
          '코오롱글로벌',
          '태영건설']
 
-
-pool = Pool(processes=8)  # 4개의 프로세스를 사용합니다.
-pool.map(MakeDataStorage, lists)  # get_contetn 함수를 넣어줍시다.
-pool.close()
-pool.join()
+run_multiprocess(lists)
 
 df = pd.DataFrame(list(DataList))
 df.to_html(pathfolder + '/today' + datetime + '.html')
@@ -77,3 +78,4 @@ worksheet.conditional_format('T2:Y2000', {'type':     'cell',
                                           'maximum': 16,
                                           'format':   format2})
 writer.save()
+print(f"time : {time.time() - start}s")  # 현재시각 - 시작시간 = 실행 시
