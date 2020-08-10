@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 import os
 
 dt_today = datetime.today()
+
 print(f'Current Time {dt_today}')
 #dt_today = datetime.strptime('2020-3-16 15:30:01', '%Y-%m-%d %H:%M:%S')
 dt_modi = dt_today
