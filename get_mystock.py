@@ -1,5 +1,5 @@
 from balancesheet_itooza import *
-from time_folder import pathfolder, datetime
+from time_folder import pathfolder, pathfolder2, datetime
 import time
 from multiprocessing import Pool  # Pool import하기
 import sys
@@ -54,6 +54,7 @@ run_multiprocess(lists)
 
 df = pd.DataFrame(list(DataList))
 df.to_html(pathfolder + '/MyStock' + datetime + '.html')
+df.to_html(border=0, classes='display compact', table_id='stocktable', justify='center', buf=pathfolder2 + '/MyStock' + datetime + '.html')
 writer = pd.ExcelWriter(pathfolder + '/MyStock' + datetime + '.xlsx', engine='xlsxwriter')
 df.to_excel(writer, sheet_name='MyStock')
 

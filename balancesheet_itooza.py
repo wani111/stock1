@@ -106,7 +106,7 @@ def GetAllo(finance, num=1, type='run'):
         return 0
 
 
-def MakeDataStorage(company):
+def MakeDataStorage(company, type='release'):
     Storage = {}
     Table = {}
     # Storage['code'] = company
@@ -149,43 +149,45 @@ def MakeDataStorage(company):
     if(Storage['code'] is not None):
         Storage['value'] = get_price(company_code)
 
-        Storage['ROE10'] = GetGeoMeanROE(Storage['bs_Year'])         # 10 years roe geomean
-        Storage['ROE5'] = GetGeoMeanROE(Storage['bs_Year'], 5)       # 5 years roe geomean
-        Storage['ROE3'] = GetGeoMeanROE(Storage['bs_Annualized'])    # 3 years roe geomean
-        Storage['ROEy'] = GetGeoMeanROE(Storage['bs_Annualized'], 4)  # 1 years roe geomean
+        # Storage['ROE10'] = GetGeoMeanROE(Storage['bs_Year'])         # 10 years roe geomean
+        # Storage['ROE5'] = GetGeoMeanROE(Storage['bs_Year'], 5)       # 5 years roe geomean
+        Storage['ROE3'] = round(GetGeoMeanROE(Storage['bs_Annualized']), 2)    # 3 years roe geomean
+        # Storage['ROEy'] = GetGeoMeanROE(Storage['bs_Annualized'], 4)  # 1 years roe geomean
+        Storage['EPSy'] = GetEPS(Storage['bs_Annualized'], 1)  # 1 quarter roe geomean
+        Storage['BPSy'] = GetBPS(Storage['bs_Annualized'], 1)  # 1 quarter roe geomean
+        Storage['ROEy'] = round(GetGeoMeanROE(Storage['bs_Annualized'], 1), 2)  # 1 quarter roe geomean
         Storage['EPSc'] = GetEPS(Storage['bs_Quarter'], 1)  # 1 quarter roe geomean
-        Storage['EPSq'] = GetEPS(Storage['bs_Annualized'], 1)  # 1 quarter roe geomean
-        Storage['BPSq'] = GetBPS(Storage['bs_Annualized'], 1)  # 1 quarter roe geomean
-        Storage['ROEq'] = GetGeoMeanROE(Storage['bs_Annualized'], 1)  # 1 quarter roe geomean
-        if Storage['BPSq'] < 0:
-            Storage['BPSq'] = 0.001
+        if Storage['BPSy'] < 0:
+            Storage['BPSy'] = 0.001
 
         try:
-            Storage['배당'] = GetAllo(Storage['bs_Year'], 1)  # 1 quarter roe geomean
+            Storage['DPS(%)'] = GetAllo(Storage['bs_Year'], 1)  # 1 quarter roe geomean
         except:
-            Storage['배당'] = 0
+            Storage['DPS(%)'] = 0
         try:
-            Storage['PER'] = Storage['value'] / Storage['EPSq']
+            Storage['PER'] = round(Storage['value'] / Storage['EPSy'], 2)
         except ZeroDivisionError:
             Storage['PER'] = 'N/A'
         try:
-            Storage['PBR'] = Storage['value'] / Storage['BPSq']  # 1 quarter roe geomean
+            Storage['PBR'] = round(Storage['value'] / Storage['BPSy'], 2)  # 1 quarter roe geomean
         except ZeroDivisionError:
             Storage['PBR'] = 'N/A'
-        Storage['FV10'] = pow((Storage['ROE10']+100)/100, 10) * Storage['BPSq']
-        Storage['FV5'] = pow((Storage['ROE5']+100)/100, 10) * Storage['BPSq']
-        Storage['FV3'] = pow((Storage['ROE3']+100)/100, 10) * Storage['BPSq']
-        Storage['FVy'] = pow((Storage['ROEy']+100)/100, 10) * Storage['BPSq']
-        Storage['FVq'] = pow((Storage['ROEq']+100)/100, 10) * Storage['BPSq']
-        Storage['EX10'] = (pow(Storage['FV10'] / Storage['value'], 0.1)-1)*100  # 1 quarter roe geomean
-        Storage['EX5'] = (pow(Storage['FV5'] / Storage['value'], 0.1)-1)*100  # 1 quarter roe geomean
-        Storage['EX3'] = (pow(Storage['FV3'] / Storage['value'], 0.1)-1)*100  # 1 quarter roe geomean
-        Storage['EXy'] = (pow(Storage['FVy'] / Storage['value'], 0.1)-1)*100  # 1 quarter roe geomean
-        Storage['EXq'] = (pow(Storage['FVq'] / Storage['value'], 0.1)-1)*100  # 1 quarter roe geomean
+        # Storage['FV10'] = pow((Storage['ROE10']+100)/100, 10) * Storage['BPSy']
+        # Storage['FV5'] = pow((Storage['ROE5']+100)/100, 10) * Storage['BPSy']
+        Storage['FV3'] = pow((Storage['ROE3']+100)/100, 10) * Storage['BPSy']
+        Storage['FVy'] = pow((Storage['ROEy']+100)/100, 10) * Storage['BPSy']
+        # Storage['FVq'] = pow((Storage['ROEq']+100)/100, 10) * Storage['BPSy']
+        # Storage['EX10'] = (pow(Storage['FV10'] / Storage['value'], 0.1)-1)*100  # 1 quarter roe geomean
+        # Storage['EX5'] = (pow(Storage['FV5'] / Storage['value'], 0.1)-1)*100  # 1 quarter roe geomean
+        Storage['EX3'] = round((pow(Storage['FV3'] / Storage['value'], 0.1)-1)*100, 2)  # 1 quarter roe geomean
+        Storage['EXy'] = round((pow(Storage['FVy'] / Storage['value'], 0.1)-1)*100, 2)  # 1 quarter roe geomean
+        # Storage['EXq'] = (pow(Storage['FVq'] / Storage['value'], 0.1)-1)*100  # 1 quarter roe geomean
         # Storage['가격5'] = Storage['미래가치'] / pow(1.05, 10) # 1 quarter roe geomean
         # Storage['이득5'] = Storage['가격5'] / Storage['value'] * 100 # 1 quarter roe geomean
-        # Storage['가격10'] = Storage['미래가치'] / pow(1.10, 10) # 1 quarter roe geomean
-        # Storage['이득10'] = Storage['가격10'] / Storage['value'] * 100 # 1 quarter roe geomean
+        Storage['TP10'] = round(Storage['FVy'] / pow(1.08, 10), 0)  # 1 quarter roe geomean
+        Storage['ER10(%)'] = round(Storage['TP10'] / Storage['value'] * 100, 0) - 100  # 1 quarter roe geomean
+        Storage['TPy'] = round((Storage['EPSy'] * 12.5), 0)  # 1 quarter roe geomean
+        Storage['ERy(%)'] = round(Storage['TPy'] / Storage['value'] * 100, 0) - 100  # 1 quarter roe geomean
         # Storage['가격15'] = Storage['미래가치'] / pow(1.15, 10) # 1 quarter roe geomean
         # Storage['이득15'] = Storage['가격15'] / Storage['value'] * 100 # 1 quarter roe geomean
         # Storage['가격20'] = Storage['미래가치'] / pow(1.20, 10) # 1 quarter roe geomean
@@ -198,16 +200,19 @@ def MakeDataStorage(company):
 
 # GetImportantData(MakeDataStorage('삼성전자'))
 # d = pd.DataFrame(list(MakeDataStorage('삼성전자').items()), columns=['name', 'vaule', 'ROE10', 'ROE5', 'ROE3', 'ROEy', 'ROEq', 'EPSq', \
-#     'BPSq', '배당', 'PER', 'PBR', '미래가치', '기대ROE', '가격5', '이득5', '가격10', '이득10', '가격15', '이득15', '가격20', '이득20'])
+#     'BPSy', '배당', 'PER', 'PBR', '미래가치', '기대ROE', '가격5', '이득5', '가격10', '이득10', '가격15', '이득15', '가격20', '이득20'])
 df = pd.DataFrame()
 manager = multiprocessing.Manager()
 DataList = manager.list()
 # DataList = []
 
 
-def MakeDataFrameforDisplay(Data):
+def MakeDataFrameforDisplay(Data, type='release'):
     if Data is not None:
         print(f"Progrssing... {Data['name']}")
+        del Data['code']
+        del Data['FV3']
+        del Data['FVy']
         del Data['bs_Annualized']
         del Data['bs_Year']
         del Data['bs_Quarter']

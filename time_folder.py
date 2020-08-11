@@ -51,3 +51,6 @@ Make_Folder(kospipathfolder + '/Year/csv')
 Make_Folder(kospipathfolder + '/Year/html')
 Make_Folder(kospipathfolder + '/Quarter/csv')
 Make_Folder(kospipathfolder + '/Quarter/html')
+
+pathfolder2 = '../website/rankingstock/html/financedata/' + datetime
+Make_Folder(pathfolder2)

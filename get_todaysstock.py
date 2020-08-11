@@ -42,6 +42,7 @@ run_multiprocess(lists)
 
 df = pd.DataFrame(list(DataList))
 df.to_html(pathfolder + '/today' + datetime + '.html')
+df.to_html(border=0, classes='display compact', table_id='stocktable', justify='center', buf=pathfolder2 + '/MyStock' + datetime + '.html')
 writer = pd.ExcelWriter(pathfolder + '/today' + datetime + '.xlsx', engine='xlsxwriter')
 df.to_excel(writer, sheet_name='today')
 

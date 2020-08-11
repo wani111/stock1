@@ -62,6 +62,7 @@ lists = kosdaq_stock_code["Name"].tolist()
 run_multiprocess(lists)
 df = pd.DataFrame(list(DataList))
 df.to_html(pathfolder + '/kosdaq' + datetime + '.html')
+df.to_html(border=0, classes='display compact', table_id='stocktable', justify='center', buf=pathfolder2 + '/MyStock' + datetime + '.html')
 writer = pd.ExcelWriter(pathfolder + '/kosdaq' + datetime + '.xlsx', engine='xlsxwriter')
 df.to_excel(writer, sheet_name='kosdaq')
 
