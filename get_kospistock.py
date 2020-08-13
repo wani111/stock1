@@ -3,10 +3,12 @@ from companycode import *
 import time
 import sys
 import pandas as pd
-from time_folder import pathfolder, pathfolder2, datetime
+from time_folder import *
 from multiprocessing import Pool  # Pool import하기
 import sys
 from run import *
+import json
+
 log = open('log.txt', 'w', encoding='utf-8')
 #     print(bs, file=bstable)
 
@@ -70,6 +72,17 @@ df.to_html(pathfolder + '/kospi' + datetime + '.html')
 df.to_html(border=0, classes='display compact', table_id='stocktable', justify='center', buf=pathfolder2 + '/kospi' + datetime + '.html')
 writer = pd.ExcelWriter(pathfolder + '/kospi' + datetime + '.xlsx', engine='xlsxwriter')
 df.to_excel(writer, sheet_name='kospi')
+
+df.insert(0, 'rank', 1)
+result = df.to_json(orient='split', index=False, indent=4)
+parsed = json.loads(result)
+del parsed['columns']
+# print(f'{parsed}, {type(parsed)}')
+with open(pathfolder2 + '/Kospi' + datetime + '.json', 'w') as f:
+    json.dump(parsed, f)
+with open(pathfolder3 + 'Kospi.json', 'w') as f:
+    json.dump(parsed, f)
+
 
 workbook = writer.book
 worksheet = writer.sheets['kospi']

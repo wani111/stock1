@@ -1,9 +1,11 @@
 from balancesheet_itooza import *
-from time_folder import pathfolder, pathfolder2, datetime
+from time_folder import *
 import time
 from multiprocessing import Pool  # Pool import하기
 import sys
 from run import *
+import json
+
 start = time.time()
 
 
@@ -58,6 +60,16 @@ df.to_html(pathfolder + '/MyStock' + datetime + '.html')
 df.to_html(border=0, classes='display compact', table_id='stocktable', justify='center', buf=pathfolder2 + '/MyStock' + datetime + '.html')
 writer = pd.ExcelWriter(pathfolder + '/MyStock' + datetime + '.xlsx', engine='xlsxwriter')
 df.to_excel(writer, sheet_name='MyStock')
+
+df.insert(0, 'rank', 1)
+result = df.to_json(orient='split', index=False, indent=4)
+parsed = json.loads(result)
+del parsed['columns']
+# print(f'{parsed}, {type(parsed)}')
+with open(pathfolder2 + '/MyStock' + datetime + '.json', 'w') as f:
+    json.dump(parsed, f)
+with open(pathfolder3 + 'MyStock.json', 'w') as f:
+    json.dump(parsed, f)
 
 workbook = writer.book
 worksheet = writer.sheets['MyStock']

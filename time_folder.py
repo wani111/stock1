@@ -54,3 +54,5 @@ Make_Folder(kospipathfolder + '/Quarter/html')
 
 pathfolder2 = '../website/rankingstock/html/financedata/' + datetime
 Make_Folder(pathfolder2)
+
+pathfolder3 = '../website/rankingstock/html/financedata/'

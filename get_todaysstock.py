@@ -1,9 +1,10 @@
 from balancesheet_itooza import *
-from time_folder import pathfolder, pathfolder2, datetime
+from time_folder import *
 from multiprocessing import Pool  # Pool import하기
 import sys
 from run import *
 import time
+import json
 
 start = time.time()
 
@@ -15,36 +16,28 @@ lists = ['KG케미칼',
          '백광산업',
          '한솔케미칼',
          '영풍제지',
-         'DB하이텍',
-         '해성디에스',
-         '한진중공업홀딩스',
-         'JW생명과학',
-         '대원제약',
-         '케이씨텍',
-         '삼양식품',
-         '샘표식품',
-         '크라운제과',
-         '시디즈',
-         'SK디앤디',
-         '다우기술',
-         '더블유게임즈',
-         '에이리츠',
-         '두산인프라코어',
-         'S&T홀딩스',
-         '대상홀딩스',
-         '미원홀딩스',
-         '한국콜마홀딩스',
-         '동부건설',
-         '코오롱글로벌',
-         '태영건설']
+         ]
 
 run_multiprocess(lists)
 
 df = pd.DataFrame(list(DataList))
 df.to_html(pathfolder + '/today' + datetime + '.html')
 df.to_html(border=0, classes='display compact', table_id='stocktable', justify='center', buf=pathfolder2 + '/today' + datetime + '.html')
+
+
 writer = pd.ExcelWriter(pathfolder + '/today' + datetime + '.xlsx', engine='xlsxwriter')
 df.to_excel(writer, sheet_name='today')
+
+df.insert(0, 'rank', 1)
+result = df.to_json(orient='split', index=False, indent=4)
+parsed = json.loads(result)
+del parsed['columns']
+# print(f'{parsed}, {type(parsed)}')
+with open(pathfolder2 + '/today' + datetime + '.json', 'w') as f:
+    json.dump(parsed, f)
+with open(pathfolder3 + 'today.json', 'w') as f:
+    json.dump(parsed, f)
+
 
 workbook = writer.book
 worksheet = writer.sheets['today']
