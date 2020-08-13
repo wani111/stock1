@@ -2,7 +2,7 @@ from balancesheet_itooza import *
 from companycode import *
 import time
 import pandas as pd
-from time_folder import pathfolder, datetime
+from time_folder import pathfolder, pathfolder2, datetime
 from multiprocessing import Pool  # Pool import하기
 import sys
 from run import *
@@ -62,7 +62,7 @@ lists = kosdaq_stock_code["Name"].tolist()
 run_multiprocess(lists)
 df = pd.DataFrame(list(DataList))
 df.to_html(pathfolder + '/kosdaq' + datetime + '.html')
-df.to_html(border=0, classes='display compact', table_id='stocktable', justify='center', buf=pathfolder2 + '/MyStock' + datetime + '.html')
+df.to_html(border=0, classes='display compact', table_id='stocktable', justify='center', buf=pathfolder2 + '/kosdaq' + datetime + '.html')
 writer = pd.ExcelWriter(pathfolder + '/kosdaq' + datetime + '.xlsx', engine='xlsxwriter')
 df.to_excel(writer, sheet_name='kosdaq')
 

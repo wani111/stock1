@@ -148,7 +148,8 @@ def MakeDataStorage(company, type='release'):
 
     if(Storage['code'] is not None):
         Storage['value'] = get_price(company_code)
-
+        if(Storage['value'] == 1):
+            return Storage
         # Storage['ROE10'] = GetGeoMeanROE(Storage['bs_Year'])         # 10 years roe geomean
         # Storage['ROE5'] = GetGeoMeanROE(Storage['bs_Year'], 5)       # 5 years roe geomean
         Storage['ROE3'] = round(GetGeoMeanROE(Storage['bs_Annualized']), 2)    # 3 years roe geomean

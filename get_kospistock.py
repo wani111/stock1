@@ -3,7 +3,7 @@ from companycode import *
 import time
 import sys
 import pandas as pd
-from time_folder import pathfolder, datetime
+from time_folder import pathfolder, pathfolder2, datetime
 from multiprocessing import Pool  # Pool import하기
 import sys
 from run import *
@@ -67,7 +67,7 @@ run_multiprocess(lists)
 
 df = pd.DataFrame(list(DataList))
 df.to_html(pathfolder + '/kospi' + datetime + '.html')
-df.to_html(border=0, classes='display compact', table_id='stocktable', justify='center', buf=pathfolder2 + '/MyStock' + datetime + '.html')
+df.to_html(border=0, classes='display compact', table_id='stocktable', justify='center', buf=pathfolder2 + '/kospi' + datetime + '.html')
 writer = pd.ExcelWriter(pathfolder + '/kospi' + datetime + '.xlsx', engine='xlsxwriter')
 df.to_excel(writer, sheet_name='kospi')
 
