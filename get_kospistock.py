@@ -82,7 +82,10 @@ with open(pathfolder2 + '/Kospi' + datetime + '.json', 'w') as f:
     json.dump(parsed, f)
 with open(pathfolder3 + 'Kospi.json', 'w') as f:
     json.dump(parsed, f)
-
+tm = time.localtime()
+string = time.strftime('%Y-%m-%d %H:%M', tm)
+with open(pathfolder3 + 'kospi_lastupdate.txt', 'w') as f:
+    f.write(string)
 
 workbook = writer.book
 worksheet = writer.sheets['kospi']

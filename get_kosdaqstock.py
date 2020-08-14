@@ -77,7 +77,10 @@ with open(pathfolder2 + '/Kosdaq' + datetime + '.json', 'w') as f:
     json.dump(parsed, f)
 with open(pathfolder3 + 'Kosdaq.json', 'w') as f:
     json.dump(parsed, f)
-
+tm = time.localtime()
+string = time.strftime('%Y-%m-%d %H:%M', tm)
+with open(pathfolder3 + 'kosdaq_lastupdate.txt', 'w') as f:
+    f.write(string)
 
 workbook = writer.book
 worksheet = writer.sheets['kosdaq']
