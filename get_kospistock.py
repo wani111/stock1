@@ -68,6 +68,7 @@ run_multiprocess(lists)
 # print(f'2 {DataList}')
 
 df = pd.DataFrame(list(DataList))
+df = df[['name', 'value', 'TPy', 'ERy(%)', 'TP10', 'ER10(%)', 'ROE3', 'EPSy', 'BPSy', 'ROEy', 'EPSc', 'DPS(%)', 'PER', 'PBR', 'EX3', 'EXy']]
 df.to_html(pathfolder + '/kospi' + datetime + '.html')
 df.to_html(border=0, classes='display compact', table_id='stocktable', justify='center', buf=pathfolder2 + '/kospi' + datetime + '.html')
 writer = pd.ExcelWriter(pathfolder + '/kospi' + datetime + '.xlsx', engine='xlsxwriter')
