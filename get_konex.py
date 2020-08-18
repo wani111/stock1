@@ -16,7 +16,7 @@ start = time.time()
 lists = konex_stock_code["Name"].tolist()
 run_multiprocess(lists)
 df = pd.DataFrame(list(DataList))
-df = df[['name', 'value', 'TPy', 'ERy(%)', 'TP10', 'ER10(%)', 'ROE3', 'EPSy', 'BPSy', 'ROEy', 'EPSc', 'DPS(%)', 'PER', 'PBR', 'EX3', 'EXy']]
+df = df[['name', 'code', 'value', 'TPy', 'ERy(%)', 'TP10', 'ER10(%)', 'ROE3', 'EPSy', 'BPSy', 'ROEy', 'EPSc', 'DPS(%)', 'PER', 'PBR', 'EX3', 'EXy']]
 df.to_html(pathfolder + '/konex' + datetime + '.html')
 df.to_html(border=0, classes='display compact', table_id='stocktable', justify='center', buf=pathfolder2 + '/konex' + datetime + '.html')
 writer = pd.ExcelWriter(pathfolder + '/konex' + datetime + '.xlsx', engine='xlsxwriter')

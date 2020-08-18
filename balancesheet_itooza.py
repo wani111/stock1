@@ -211,7 +211,6 @@ DataList = manager.list()
 def MakeDataFrameforDisplay(Data, type='release'):
     if Data is not None:
         print(f"Progrssing... {Data['name']}")
-        del Data['code']
         del Data['FV3']
         del Data['FVy']
         del Data['bs_Annualized']
